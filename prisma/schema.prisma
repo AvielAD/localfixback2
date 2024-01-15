@@ -1,0 +1,110 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model brandequipo {
+  id              Int            @id @default(autoincrement())
+  nombre          String?        @db.VarChar(250)
+  idcompanyequipo Int?
+  companyequipo   companyequipo? @relation(fields: [idcompanyequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_brandequipo_companyequipo")
+  equipos         equipos[]
+}
+
+model catalogoestado {
+  id               Int                @id @default(autoincrement())
+  nombre           String?            @db.VarChar(250)
+  codigo           String?            @db.VarChar(250)
+  reparacionestado reparacionestado[]
+}
+
+model cliente {
+  id         Int          @id @default(autoincrement())
+  nombre     String?      @db.VarChar(250)
+  apellido   String?      @db.VarChar(250)
+  telefono   String?      @db.VarChar(20)
+  email      String?      @db.VarChar(250)
+  reparacion reparacion[]
+}
+
+model companyequipo {
+  id          Int           @id @default(autoincrement())
+  nombre      String?       @db.VarChar(250)
+  descripcion String?       @db.VarChar(250)
+  brandequipo brandequipo[]
+}
+
+model equipos {
+  id            Int          @id @default(autoincrement())
+  modelopopular String?      @db.VarChar(250)
+  modelotecnico String?      @db.VarChar(250)
+  observaciones String?
+  idbrandequipo Int?
+  brandequipo   brandequipo? @relation(fields: [idbrandequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_equipos_brandequipo")
+}
+
+model refaccion {
+  id                Int                 @id @default(autoincrement())
+  nombre            String?             @db.VarChar(250)
+  descripcion       String?             @db.VarChar(250)
+  observaciones     String?
+  costocompra       Decimal?            @db.Money
+  costoventa        Decimal?            @db.Money
+  stock             Int?
+  trabajo_refaccion trabajo_refaccion[]
+}
+
+model reparacion {
+  id                Int                 @id @default(autoincrement())
+  fecharecepcion    DateTime?           @db.Timestamptz(6)
+  fechaentrega      DateTime?           @db.Timestamptz(6)
+  costototal        Decimal?            @db.Money
+  idcliente         Int?
+  cliente           cliente?            @relation(fields: [idcliente], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparacion_cliente")
+  reparacionestado  reparacionestado[]
+  trabajo_refaccion trabajo_refaccion[]
+}
+
+model reparacionestado {
+  idreparacion     Int
+  idcatalogoestado Int
+  observaciones    String?
+  status           Boolean?
+  catalogoestado   catalogoestado @relation(fields: [idcatalogoestado], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparacionestado_catalogoestado")
+  reparacion       reparacion     @relation(fields: [idreparacion], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparacionestado_reparacion")
+
+  @@id([idreparacion, idcatalogoestado])
+}
+
+model trabajo {
+  id                Int                 @id @default(autoincrement())
+  idequipo          Int?
+  idcliente         Int?
+  trabajo_refaccion trabajo_refaccion[]
+}
+
+model trabajo_refaccion {
+  idtrabajo    Int
+  idrefaccion  Int
+  idreparacion Int?
+  fechatrabajo DateTime?   @db.Timestamptz(6)
+  costoparcial Decimal?    @db.Money
+  refaccion    refaccion   @relation(fields: [idrefaccion], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_trabajorefaccion_refaccion")
+  reparacion   reparacion? @relation(fields: [idreparacion], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_trabajorefaccion_reparacion")
+  trabajo      trabajo     @relation(fields: [idtrabajo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_trabajorefaccion_trabajo")
+
+  @@id([idtrabajo, idrefaccion])
+}
+
+view devices {
+  id      Int    @unique
+  model   String? @db.VarChar(250)
+  brand   String? @db.VarChar(250)
+  company String? @db.VarChar(250)
+
+}
