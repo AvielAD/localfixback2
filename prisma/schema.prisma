@@ -40,12 +40,13 @@ model companyequipo {
 }
 
 model equipos {
-  id            Int          @id @default(autoincrement())
-  modelopopular String?      @db.VarChar(250)
-  modelotecnico String?      @db.VarChar(250)
+  id            Int           @id @default(autoincrement())
+  modelopopular String?       @db.VarChar(250)
+  modelotecnico String?       @db.VarChar(250)
   observaciones String?
   idbrandequipo Int?
-  brandequipo   brandequipo? @relation(fields: [idbrandequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_equipos_brandequipo")
+  diagnostico   diagnostico[]
+  brandequipo   brandequipo?  @relation(fields: [idbrandequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_equipos_brandequipo")
 }
 
 model refaccion {
@@ -101,10 +102,20 @@ model trabajo_refaccion {
   @@id([idtrabajo, idrefaccion])
 }
 
+model diagnostico {
+  id                   Int       @id @default(autoincrement())
+  fecha                DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Timestamptz(6)
+  cliente              String?   @db.VarChar(250)
+  descripcionfalla     String?
+  sugerenciareparacion String?
+  costopresupuesto     Decimal?  @db.Money
+  idequipo             Int?
+  equipos              equipos?  @relation(fields: [idequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_diagnostico_equipos")
+}
+
 view devices {
-  id      Int    @unique
+  id      Int     @unique
   model   String? @db.VarChar(250)
   brand   String? @db.VarChar(250)
   company String? @db.VarChar(250)
-
 }
