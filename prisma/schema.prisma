@@ -40,13 +40,15 @@ model companyequipo {
 }
 
 model equipos {
-  id            Int           @id @default(autoincrement())
-  modelopopular String?       @db.VarChar(250)
-  modelotecnico String?       @db.VarChar(250)
-  observaciones String?
-  idbrandequipo Int?
-  diagnostico   diagnostico[]
-  brandequipo   brandequipo?  @relation(fields: [idbrandequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_equipos_brandequipo")
+  id                Int              @id @default(autoincrement())
+  modelopopular     String?          @db.VarChar(250)
+  modelotecnico     String?          @db.VarChar(250)
+  observaciones     String?
+  idbrandequipo     Int?
+  idcategoriaequipo Int              @default(1)
+  diagnostico       diagnostico[]
+  brandequipo       brandequipo?     @relation(fields: [idbrandequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_equipos_brandequipo")
+  categoria_equipo  categoria_equipo @relation(fields: [idcategoriaequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_equipos_categoriaequipo")
 }
 
 model refaccion {
@@ -61,14 +63,15 @@ model refaccion {
 }
 
 model reparacion {
-  id                Int                 @id @default(autoincrement())
-  fecharecepcion    DateTime?           @db.Timestamptz(6)
-  fechaentrega      DateTime?           @db.Timestamptz(6)
-  costototal        Decimal?            @db.Money
-  idcliente         Int?
-  cliente           cliente?            @relation(fields: [idcliente], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparacion_cliente")
-  reparacionestado  reparacionestado[]
-  trabajo_refaccion trabajo_refaccion[]
+  id                     Int                      @id @default(autoincrement())
+  fecharecepcion         DateTime?                @default(now()) @db.Timestamptz(6)
+  fechaentrega           DateTime?                @db.Timestamptz(6)
+  costototal             Decimal?                 @db.Money
+  idcliente              Int?
+  cliente                cliente?                 @relation(fields: [idcliente], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparacion_cliente")
+  reparacion_diagnostico reparacion_diagnostico[]
+  reparacionestado       reparacionestado[]
+  trabajo_refaccion      trabajo_refaccion[]
 }
 
 model reparacionestado {
@@ -103,14 +106,32 @@ model trabajo_refaccion {
 }
 
 model diagnostico {
-  id                   Int       @id @default(autoincrement())
-  fecha                DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Timestamptz(6)
-  cliente              String?   @db.VarChar(250)
-  descripcionfalla     String?
-  sugerenciareparacion String?
-  costopresupuesto     Decimal?  @db.Money
-  idequipo             Int?
-  equipos              equipos?  @relation(fields: [idequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_diagnostico_equipos")
+  id                     Int                      @id @default(autoincrement())
+  fecha                  DateTime?                @default(now()) @db.Timestamptz(6)
+  cliente                String?                  @db.VarChar(250)
+  descripcionfalla       String?
+  sugerenciareparacion   String?
+  costopresupuesto       Decimal?                 @db.Money
+  idequipo               Int?
+  equipos                equipos?                 @relation(fields: [idequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_diagnostico_equipos")
+  reparacion_diagnostico reparacion_diagnostico[]
+}
+
+model categoria_equipo {
+  id          Int       @id @default(autoincrement())
+  nombre      String?   @db.VarChar(100)
+  descripcion String?
+  equipos     equipos[]
+}
+
+model reparacion_diagnostico {
+  idreparacion  Int
+  iddiagnostico Int
+  fecha         DateTime?   @default(now()) @db.Timestamptz(6)
+  diagnostico   diagnostico @relation(fields: [iddiagnostico], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparaciondiagnostico_diagnostico")
+  reparacion    reparacion  @relation(fields: [idreparacion], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparaciondiagnostico_reparacion")
+
+  @@id([idreparacion, iddiagnostico])
 }
 
 view devices {
