@@ -13,5 +13,6 @@ RUN npm install
 COPY . .
 #Prisma client
 RUN npx prisma generate
+RUN npm run build
 EXPOSE 3000
 CMD [ "npm", "start" ]
