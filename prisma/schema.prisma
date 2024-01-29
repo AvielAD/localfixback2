@@ -140,3 +140,13 @@ view devices {
   brand   String? @db.VarChar(250)
   company String? @db.VarChar(250)
 }
+
+view diagnosticosview {
+  id               Int      @unique
+  nombre           String?   @db.VarChar(250)
+  modelopopular    String?   @db.VarChar(250)
+  fecha            DateTime? @db.Timestamptz(6)
+  descripcionfalla String?
+  costopresupuesto Decimal?  @db.Money
+
+}

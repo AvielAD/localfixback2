@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 export const GetDiagnosticos = async ()=>{
     try {
-        const diagnosticos = await prisma.diagnostico.findMany()
+        const diagnosticos = await prisma.diagnosticosview.findMany()
 
         return diagnosticos
 
