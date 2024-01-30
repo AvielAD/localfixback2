@@ -68,6 +68,7 @@ model reparacion {
   fechaentrega           DateTime?                @db.Timestamptz(6)
   costototal             Decimal?                 @db.Money
   idcliente              Int?
+  uuidsearch             String?                  @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   cliente                cliente?                 @relation(fields: [idcliente], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparacion_cliente")
   reparacion_diagnostico reparacion_diagnostico[]
   reparacionestado       reparacionestado[]
@@ -142,11 +143,27 @@ view devices {
 }
 
 view diagnosticosview {
-  id               Int      @unique
+  id               Int       @unique
   nombre           String?   @db.VarChar(250)
   modelopopular    String?   @db.VarChar(250)
   fecha            DateTime? @db.Timestamptz(6)
   descripcionfalla String?
   costopresupuesto Decimal?  @db.Money
+}
+
+view reparacionesview {
+  id          Int      @unique
+  uuid        String?   @db.Uuid
+  nombre      String?   @db.VarChar(250)
+  apellido    String?   @db.VarChar(250)
+  telefono    String?   @db.VarChar(20)
+  recepcion   DateTime? @db.Timestamptz(6)
+  entrega     DateTime? @db.Timestamptz(6)
+  modelo      String?   @db.VarChar(250)
+  marca       String?   @db.VarChar(250)
+  falla       String?
+  diagnostico String?
+  presupuesto Decimal?  @db.Money
+  total       Decimal?  @db.Money
 
 }
