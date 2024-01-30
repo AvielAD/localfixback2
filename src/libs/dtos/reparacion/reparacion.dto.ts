@@ -4,3 +4,13 @@ export interface AddReparacionDto{
     costototal: number,
     idcliente: number
 }
+
+export interface CreateReparacionDto{
+    nombre: string,
+    apellido: string,
+    telefono: string,
+    email: string,
+    fechaentrega: Date,
+    costototal: number,
+    iddiagnostico: number
+}

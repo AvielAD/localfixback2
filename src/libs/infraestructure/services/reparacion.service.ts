@@ -1,6 +1,6 @@
 
 import { ServerResponseDTO } from '../../dtos/ServerResponse/ServerResponse.dto'
-import { AddReparacionDto } from '../../dtos/reparacion/reparacion.dto'
+import { AddReparacionDto, CreateReparacionDto } from '../../dtos/reparacion/reparacion.dto'
 import * as CtrlRepository from '../repositories/reparacion.repository'
 
 export const GetReparaciones = async ()=>{
@@ -8,9 +8,9 @@ export const GetReparaciones = async ()=>{
     return devices
 }
 
-export const AddReparacion = async (reparacion: AddReparacionDto)=> {
+export const AddReparacion = async (reparacion: CreateReparacionDto)=> {
     const response = {} as ServerResponseDTO
-    let responseReparacion = await CtrlRepository.AddReparacion(reparacion)
+    let responseReparacion = await CtrlRepository.CreateReparacion(reparacion)
 
     if(responseReparacion){
         response.message = 'Reparacion agregada correctamente'

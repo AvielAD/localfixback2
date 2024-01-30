@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import * as CtrlService from '../infraestructure/services/reparacion.service'
-import { AddReparacionDto } from "../dtos/reparacion/reparacion.dto";
+import { AddReparacionDto, CreateReparacionDto } from "../dtos/reparacion/reparacion.dto";
 
 export const GetReparaciones = async (req: Request, res: Response) => {
     try {
@@ -14,7 +14,7 @@ export const GetReparaciones = async (req: Request, res: Response) => {
 }
 
 export const AddDiagnosticos = async (req: Request, res: Response) => {
-    const newReparacion: AddReparacionDto = req.body
+    const newReparacion: CreateReparacionDto = req.body
     try {
 
         const result = await CtrlService.AddReparacion(newReparacion);
