@@ -13,7 +13,21 @@ export const GetReparaciones = async (req: Request, res: Response) => {
     }
 }
 
-export const AddDiagnosticos = async (req: Request, res: Response) => {
+export const GetReparacionesByUUID = async (req: Request, res: Response) => {
+    const uuidSearch: string = String(req.params["uuidSearch"]) ?? ""
+    try {
+
+        const result = await CtrlService.GetReparacionesByUUID(uuidSearch);
+        if(result)
+            return res.status(200).json(result);
+        else
+            return res.status(404).json({})
+    } catch (error) {
+        return res.status(404).json([])
+    }
+}
+
+export const AddReparacion = async (req: Request, res: Response) => {
     const newReparacion: CreateReparacionDto = req.body
     try {
 

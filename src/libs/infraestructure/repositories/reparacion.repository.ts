@@ -5,12 +5,36 @@ const prisma = new PrismaClient()
 
 export const GetReparaciones = async ()=>{
     try {
-        const reparaciones = await prisma.reparacion.findMany()
+        const reparaciones = await prisma.reparacionesview.findMany({
+            select:{
+                uuid: true,
+                recepcion: true,
+                entrega: true,
+                modelo: true,
+                marca: true,
+                falla: true, 
+                diagnostico: true,
+            }
+        })
+
 
         return reparaciones
 
     } catch (error) {
         return []
+    }
+}
+
+export const GetReparacionByUUID= async (uuidSearch: string) =>{
+    try{
+        const searchbyuuid = await prisma.reparacionesview.findFirst({
+            where:{
+                uuid: uuidSearch
+            }
+        })
+        return searchbyuuid
+    }catch(error){
+
     }
 }
 

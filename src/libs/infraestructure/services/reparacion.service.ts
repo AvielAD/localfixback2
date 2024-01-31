@@ -8,6 +8,11 @@ export const GetReparaciones = async ()=>{
     return devices
 }
 
+
+export const GetReparacionesByUUID = async (uuidSearch: string)=>{
+    let devices = await CtrlRepository.GetReparacionByUUID(uuidSearch)
+    return devices
+}
 export const AddReparacion = async (reparacion: CreateReparacionDto)=> {
     const response = {} as ServerResponseDTO
     let responseReparacion = await CtrlRepository.CreateReparacion(reparacion)
