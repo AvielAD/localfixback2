@@ -152,7 +152,7 @@ view diagnosticosview {
 }
 
 view reparacionesview {
-  id          Int      @unique
+  id          Int       @unique
   uuid        String?   @db.Uuid
   nombre      String?   @db.VarChar(250)
   apellido    String?   @db.VarChar(250)
@@ -165,5 +165,4 @@ view reparacionesview {
   diagnostico String?
   presupuesto Decimal?  @db.Money
   total       Decimal?  @db.Money
-
 }

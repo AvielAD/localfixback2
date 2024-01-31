@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import { AddReparacionDto, CreateReparacionDto } from "../../dtos/reparacion/reparacion.dto"
+import { AddReparacionDto, CreateReparacionDto, ReparacionAllDto } from "../../dtos/reparacion/reparacion.dto"
 
 const prisma = new PrismaClient()
 
@@ -26,14 +26,37 @@ export const GetReparaciones = async ()=>{
 }
 
 export const GetReparacionByUUID= async (uuidSearch: string) =>{
+    let searchResponse = {} as ReparacionAllDto
+
     try{
         const searchbyuuid = await prisma.reparacionesview.findFirst({
             where:{
                 uuid: uuidSearch
             }
         })
-        return searchbyuuid
+
+        if(searchbyuuid != null){
+            searchResponse = {
+                id: searchbyuuid.id,
+                uuid: searchbyuuid.uuid ?? "",
+                nombre: searchbyuuid.nombre ?? "",
+                apellido: searchbyuuid.apellido ?? "",
+                telefono: searchbyuuid.telefono ?? "",
+                recepcion:  searchbyuuid.recepcion ?? new Date(),
+                entrega: searchbyuuid.entrega ?? new Date(),
+                modelo: searchbyuuid.modelo ?? "",
+                marca: searchbyuuid.marca ?? "",
+                falla: searchbyuuid.falla ?? "",
+                diagnostico: searchbyuuid.diagnostico ?? "",
+                presupuesto: parseFloat( searchbyuuid.presupuesto?.toString() || "0") ?? 0.0,
+                total: parseFloat( searchbyuuid.presupuesto?.toString() || "0") ?? 0.0,
+            }
+            return searchResponse
+        }
+
+        return searchResponse
     }catch(error){
+        return searchResponse
 
     }
 }
