@@ -69,6 +69,7 @@ model reparacion {
   costototal             Decimal?                 @db.Money
   idcliente              Int?
   uuidsearch             String?                  @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  firststage             Boolean?
   cliente                cliente?                 @relation(fields: [idcliente], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparacion_cliente")
   reparacion_diagnostico reparacion_diagnostico[]
   reparacionestado       reparacionestado[]
@@ -114,6 +115,7 @@ model diagnostico {
   sugerenciareparacion   String?
   costopresupuesto       Decimal?                 @db.Money
   idequipo               Int?
+  firststage             Boolean?
   equipos                equipos?                 @relation(fields: [idequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_diagnostico_equipos")
   reparacion_diagnostico reparacion_diagnostico[]
 }

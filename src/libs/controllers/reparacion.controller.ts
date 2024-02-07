@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import * as CtrlService from '../infraestructure/services/reparacion.service'
-import { AddReparacionDto, CreateReparacionDto } from "../dtos/reparacion/reparacion.dto";
+import { AddReparacionDto, CreateReparacionDto, CreateReparacionFirstDto } from "../dtos/reparacion/reparacion.dto";
 
 export const GetReparaciones = async (req: Request, res: Response) => {
     try {
@@ -32,6 +32,18 @@ export const AddReparacion = async (req: Request, res: Response) => {
     try {
 
         const result = await CtrlService.AddReparacion(newReparacion);
+        return res.status(200).json(result);
+
+    } catch (error) {
+        return res.status(404).json([])
+    }
+}
+
+export const AddReparacionFirst = async (req:Request, res: Response)=>{
+    const newReparacion: CreateReparacionFirstDto = req.body
+    try {
+
+        const result = await CtrlService.AddReparacionFirst(newReparacion);
         return res.status(200).json(result);
 
     } catch (error) {

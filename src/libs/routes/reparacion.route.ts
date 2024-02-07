@@ -7,5 +7,6 @@ const router = Router()
 router.get('/reparacion',[AuthCtrl.VerifyToken], CtrlReparacion.GetReparaciones)
 router.get('/reparacion/:uuidSearch',[AuthCtrl.VerifyToken], CtrlReparacion.GetReparacionesByUUID)
 router.post('/reparacion',[AuthCtrl.VerifyToken], CtrlReparacion.AddReparacion)
+router.post('/reparacion/first',[AuthCtrl.VerifyToken], CtrlReparacion.AddReparacionFirst)
 
 export default router

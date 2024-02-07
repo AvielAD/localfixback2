@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import { AddReparacionDto, CreateReparacionDto, ReparacionAllDto } from "../../dtos/reparacion/reparacion.dto"
+import { AddReparacionDto, CreateReparacionDto, CreateReparacionFirstDto, ReparacionAllDto } from "../../dtos/reparacion/reparacion.dto"
 
 const prisma = new PrismaClient()
 
@@ -84,7 +84,7 @@ export const CreateReparacion = async (createReparacion: CreateReparacionDto) =>
                 nombre: createReparacion.nombre,
                 apellido: createReparacion.apellido || "",
                 telefono: createReparacion.telefono || "",
-                email: createReparacion.email || ""
+                email: createReparacion.email || "",
             }
         })
 
@@ -93,7 +93,8 @@ export const CreateReparacion = async (createReparacion: CreateReparacionDto) =>
             data:{
                 fechaentrega: createReparacion.fechaentrega,
                 costototal: createReparacion.costototal,
-                idcliente: newCliente.id
+                idcliente: newCliente.id,
+                firststage: false
             }
         })
         //asociar reparacion - diagnostico
@@ -106,6 +107,54 @@ export const CreateReparacion = async (createReparacion: CreateReparacionDto) =>
 
         return true
     } catch (error) {
+        return false
+    }
+}
+
+export const CreateReparacionFirst=async (createReparacion: CreateReparacionFirstDto)=>{
+    try {
+        //Cliente
+        const newCliente = await prisma.cliente.create({
+            data:{
+                nombre: createReparacion.nombre,
+                apellido: createReparacion.apellido || "",
+                telefono: createReparacion.telefono || "",
+            }
+        })
+        //Diagnostico
+        
+        const newDiagnostico = await prisma.diagnostico.create({
+            data:{
+                cliente: "N/A",
+                descripcionfalla: createReparacion.descripcionfalla,
+                sugerenciareparacion: createReparacion.sugerenciareparacion,
+                costopresupuesto: createReparacion.costototal,
+                idequipo: createReparacion.idequipo,
+                firststage: false
+            }
+        })
+        //Reparacion
+        const newReparacion = await prisma.reparacion.create({
+            data:{
+                fechaentrega: createReparacion.fechaentrega,
+                costototal: createReparacion.costototal,
+                idcliente: newCliente.id,
+                firststage: true
+            }
+        })
+
+        //Reparacion Diagnostico
+
+        const newRepairDiag = await prisma.reparacion_diagnostico.create({
+            data:{
+                idreparacion: newReparacion.id,
+                iddiagnostico: newDiagnostico.id
+            }
+        })
+
+        return true
+    } catch (error) {
+        console.log(error)
         return false
     }
 }

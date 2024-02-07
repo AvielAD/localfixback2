@@ -31,3 +31,15 @@ export interface ReparacionAllDto{
     presupuesto: number,
     total: number
 }
+
+export interface CreateReparacionFirstDto{
+    nombre: string,
+    apellido: string,
+    telefono: string,
+    fechaentrega: Date,
+    costototal: number,
+    descripcionfalla:string,
+    sugerenciareparacion:string,
+    idequipo: number
+
+}

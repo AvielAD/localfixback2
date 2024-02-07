@@ -17,7 +17,10 @@ export const GetDiagnosticos = async ()=>{
 export const AddDiagnostico = async(diagnostico: AddDiagnosticoDto)=>{
     try {
         const newDiagnostico = await prisma.diagnostico.create({
-            data:diagnostico
+            data:{
+                ...diagnostico,
+                firststage: true
+            }
         }) 
         if(newDiagnostico)
             return true
