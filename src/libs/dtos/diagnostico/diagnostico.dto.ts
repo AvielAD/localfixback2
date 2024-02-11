@@ -5,3 +5,10 @@ export interface AddDiagnosticoDto{
     costopresupuesto: number,
     idequipo: number
 }
+
+export interface UpdateDiagnosticoDto{
+    id: number,
+    descripcionfalla:string,
+    sugerenciareparacion:string,
+
+}

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import { AddDiagnosticoDto } from "../../dtos/diagnostico/diagnostico.dto"
+import { AddDiagnosticoDto, UpdateDiagnosticoDto } from "../../dtos/diagnostico/diagnostico.dto"
 
 const prisma = new PrismaClient()
 
@@ -27,6 +27,24 @@ export const AddDiagnostico = async(diagnostico: AddDiagnosticoDto)=>{
         return false
         
     } catch (error) {
+        return false
+    }
+}
+
+export const UpdateDiagnostico = async (diagnostico: UpdateDiagnosticoDto) =>{
+    try{
+        const updateDiagnostico = await prisma.diagnostico.update({
+            where:{
+                id: diagnostico.id
+            },
+            data:{
+                descripcionfalla: diagnostico.descripcionfalla,
+                sugerenciareparacion: diagnostico.sugerenciareparacion,
+            }
+        })
+
+        return true
+    }catch(error){
         return false
     }
 }

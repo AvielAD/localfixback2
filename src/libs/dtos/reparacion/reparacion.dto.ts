@@ -13,7 +13,7 @@ export interface CreateReparacionDto{
     email: string,
     fechaentrega: Date,
     costototal: number,
-    iddiagnostico: number
+    iddiagnostico: number,
 }
 
 export interface ReparacionAllDto{

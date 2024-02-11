@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import * as CtrlService from '../infraestructure/services/diagnostico.service'
-import { AddDiagnosticoDto } from "../dtos/diagnostico/diagnostico.dto";
+import { AddDiagnosticoDto, UpdateDiagnosticoDto } from "../dtos/diagnostico/diagnostico.dto";
 
 export const GetDiagnosticos = async (req: Request, res: Response) => {
     try {
@@ -18,6 +18,18 @@ export const AddDiagnosticos = async (req: Request, res: Response) => {
     try {
 
         const result = await CtrlService.AddDiagnostico(newDiagnostic);
+        return res.status(200).json(result);
+
+    } catch (error) {
+        return res.status(404).json([])
+    }
+}
+
+export const UpdateDiagnosticos = async (req: Request, res: Response) => {
+    const newDiagnostic: UpdateDiagnosticoDto = req.body
+    try {
+
+        const result = await CtrlService.UpdateDiagnostico(newDiagnostic);
         return res.status(200).json(result);
 
     } catch (error) {
