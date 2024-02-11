@@ -49,7 +49,7 @@ export const GetReparacionByUUID= async (uuidSearch: string) =>{
                 falla: searchbyuuid.falla ?? "",
                 diagnostico: searchbyuuid.diagnostico ?? "",
                 presupuesto: parseFloat( searchbyuuid.presupuesto?.toString() || "0") ?? 0.0,
-                total: parseFloat( searchbyuuid.presupuesto?.toString() || "0") ?? 0.0,
+                total: parseFloat( searchbyuuid.total?.toString() || "0") ?? 0.0,
             }
             return searchResponse
         }
