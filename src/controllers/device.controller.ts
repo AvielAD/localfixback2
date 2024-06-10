@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import * as CtrlService from '../infraestructure/services/device.service'
+import * as CtrlService from '../Apps/Dispositivos/Application/device.service'
 
 export const GetDevices = async (req: Request, res: Response) => {
     try {

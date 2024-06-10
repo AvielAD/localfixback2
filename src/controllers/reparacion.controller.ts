@@ -1,11 +1,11 @@
 import { Request, Response } from "express"
-import * as CtrlService from '../infraestructure/services/reparacion.service'
-import { AddReparacionDto, CreateReparacionDto, CreateReparacionFirstDto } from "../dtos/reparacion/reparacion.dto";
+import * as CtrlService from '../Apps/Reparaciones/Application/reparacion.service'
+import { AddReparacionDto, CreateReparacionDto, CreateReparacionFirstDto } from "../Apps/Reparaciones/Domain/reparacion/reparacion.dto";
 
 export const GetReparaciones = async (req: Request, res: Response) => {
     try {
-
-        const result = await CtrlService.GetReparaciones();
+        const iduser = req.body.uuidKey
+        const result = await CtrlService.GetReparaciones(iduser);
         return res.status(200).json(result);
 
     } catch (error) {
@@ -16,8 +16,8 @@ export const GetReparaciones = async (req: Request, res: Response) => {
 export const GetReparacionesByUUID = async (req: Request, res: Response) => {
     const uuidSearch: string = String(req.params["uuidSearch"]) ?? ""
     try {
-
-        const result = await CtrlService.GetReparacionesByUUID(uuidSearch);
+        const iduser = req.body.uuidKey
+        const result = await CtrlService.GetReparacionesByUUID(uuidSearch, iduser);
         if(result)
             return res.status(200).json(result);
         else
@@ -30,8 +30,8 @@ export const GetReparacionesByUUID = async (req: Request, res: Response) => {
 export const AddReparacion = async (req: Request, res: Response) => {
     const newReparacion: CreateReparacionDto = req.body
     try {
-
-        const result = await CtrlService.AddReparacion(newReparacion);
+        const iduser = req.body.uuidKey
+        const result = await CtrlService.AddReparacion(newReparacion, iduser);
         return res.status(200).json(result);
 
     } catch (error) {
@@ -42,8 +42,8 @@ export const AddReparacion = async (req: Request, res: Response) => {
 export const AddReparacionFirst = async (req:Request, res: Response)=>{
     const newReparacion: CreateReparacionFirstDto = req.body
     try {
-
-        const result = await CtrlService.AddReparacionFirst(newReparacion);
+        const iduser = req.body.uuidKey
+        const result = await CtrlService.AddReparacionFirst(newReparacion, iduser);
         return res.status(200).json(result);
 
     } catch (error) {

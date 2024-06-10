@@ -1,67 +1,55 @@
 import { PrismaClient } from "@prisma/client"
-import { AddReparacionDto, CreateReparacionDto, CreateReparacionFirstDto, ReparacionAllDto } from "../../dtos/reparacion/reparacion.dto"
+import { AddReparacionDto, CreateReparacionDto, CreateReparacionFirstDto, ReparacionAllDto } from "../Domain/reparacion/reparacion.dto"
 
 const prisma = new PrismaClient()
 
-export const GetReparaciones = async ()=>{
+export const GetReparaciones = async (idUser: string)=>{
     try {
-        const reparaciones = await prisma.reparacionesview.findMany({
-            select:{
-                uuid: true,
-                recepcion: true,
-                entrega: true,
-                modelo: true,
-                marca: true,
-                falla: true, 
-                diagnostico: true,
+        const empresa = await prisma.usuarioempresa.findFirstOrThrow({
+            where:{
+                idusuario: idUser
             }
         })
-
-
-        return reparaciones
-
+        //LLamar a query para la vista 
+        const responseView = await prisma.
+        $queryRaw`select 
+        r.uuid, 
+        r.recepcion, 
+        r.entrega, 
+        r.modelo, 
+        r.marca, 
+        r.falla,
+        r.diagnostico 
+        from reparacionesview r where r.empresa = ${empresa.idempresa}`
+        return responseView
     } catch (error) {
         return []
     }
 }
 
-export const GetReparacionByUUID= async (uuidSearch: string) =>{
+export const GetReparacionByUUID= async (uuidSearch: string, idUser:string) =>{
     let searchResponse = {} as ReparacionAllDto
 
     try{
-        const searchbyuuid = await prisma.reparacionesview.findFirst({
+        const empresa = await prisma.usuarioempresa.findFirstOrThrow({
             where:{
-                uuid: uuidSearch
+                idusuario: idUser
             }
         })
 
-        if(searchbyuuid != null){
-            searchResponse = {
-                id: searchbyuuid.id,
-                uuid: searchbyuuid.uuid ?? "",
-                nombre: searchbyuuid.nombre ?? "",
-                apellido: searchbyuuid.apellido ?? "",
-                telefono: searchbyuuid.telefono ?? "",
-                recepcion:  searchbyuuid.recepcion ?? new Date(),
-                entrega: searchbyuuid.entrega ?? new Date(),
-                modelo: searchbyuuid.modelo ?? "",
-                marca: searchbyuuid.marca ?? "",
-                falla: searchbyuuid.falla ?? "",
-                diagnostico: searchbyuuid.diagnostico ?? "",
-                presupuesto: parseFloat( searchbyuuid.presupuesto?.toString() || "0") ?? 0.0,
-                total: parseFloat( searchbyuuid.total?.toString() || "0") ?? 0.0,
-            }
-            return searchResponse
-        }
-
-        return searchResponse
+        const responseView = await prisma.
+        $queryRaw`select *
+        from reparacionesview r where r.empresa = ${empresa.idempresa} and r.uuid = ${uuidSearch}`
+            return responseView
+        return responseView
+        
     }catch(error){
         return searchResponse
 
     }
 }
 
-export const AddReparacion = async(reparacion: AddReparacionDto)=>{
+export const AddReparacion = async(reparacion: AddReparacionDto, idUser: string)=>{
     try {
         const newDiagnostico = await prisma.reparacion.create({
             data:reparacion
@@ -76,7 +64,7 @@ export const AddReparacion = async(reparacion: AddReparacionDto)=>{
     }
 }
 
-export const CreateReparacion = async (createReparacion: CreateReparacionDto) =>{
+export const CreateReparacion = async (createReparacion: CreateReparacionDto, idUser: string) =>{
     try {
         //Agregar cliente
         const newCliente = await prisma.cliente.create({
@@ -111,7 +99,7 @@ export const CreateReparacion = async (createReparacion: CreateReparacionDto) =>
     }
 }
 
-export const CreateReparacionFirst=async (createReparacion: CreateReparacionFirstDto)=>{
+export const CreateReparacionFirst=async (createReparacion: CreateReparacionFirstDto, idUser: string)=>{
     try {
         //Cliente
         const newCliente = await prisma.cliente.create({

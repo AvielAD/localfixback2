@@ -70,7 +70,9 @@ model reparacion {
   idcliente              Int?
   uuidsearch             String?                  @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   firststage             Boolean?
+  idempresa              Int?
   cliente                cliente?                 @relation(fields: [idcliente], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparacion_cliente")
+  empresa                empresa?                 @relation(fields: [idempresa], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparacion_idempresa")
   reparacion_diagnostico reparacion_diagnostico[]
   reparacionestado       reparacionestado[]
   trabajo_refaccion      trabajo_refaccion[]
@@ -116,7 +118,9 @@ model diagnostico {
   costopresupuesto       Decimal?                 @db.Money
   idequipo               Int?
   firststage             Boolean?
+  idempresa              Int?
   equipos                equipos?                 @relation(fields: [idequipo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_diagnostico_equipos")
+  empresa                empresa?                 @relation(fields: [idempresa], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_diagnostico_idempresa")
   reparacion_diagnostico reparacion_diagnostico[]
 }
 
@@ -135,6 +139,22 @@ model reparacion_diagnostico {
   reparacion    reparacion  @relation(fields: [idreparacion], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reparaciondiagnostico_reparacion")
 
   @@id([idreparacion, iddiagnostico])
+}
+
+model empresa {
+  id             Int              @id @default(autoincrement())
+  nombre         String?          @db.VarChar(250)
+  diagnostico    diagnostico[]
+  reparacion     reparacion[]
+  usuarioempresa usuarioempresa[]
+}
+
+model usuarioempresa {
+  idusuario String  @db.Uuid
+  idempresa Int
+  empresa   empresa @relation(fields: [idempresa], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuarioempresa_empresa")
+
+  @@id([idusuario, idempresa])
 }
 
 view devices {

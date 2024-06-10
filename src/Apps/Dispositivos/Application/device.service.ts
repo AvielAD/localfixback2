@@ -1,5 +1,5 @@
 
-import * as CtrlRepository from '../repositories/device.repository'
+import * as CtrlRepository from '../Infrastructure/device.repository'
 
 export const GetDevices = async ()=>{
     let devices = await CtrlRepository.GetDevices()

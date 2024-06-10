@@ -1,10 +1,10 @@
 import express, {Express} from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import Devices from './libs/routes/device.route'
-import Diagnostico from './libs/routes/diagnostico.route'
-import Reparacion from './libs/routes/reparacion.route'
-import Statistics from './libs/routes/statistics.route'
+import Devices from './routes/device.route'
+import Diagnostico from './routes/diagnostico.route'
+import Reparacion from './routes/reparacion.route'
+import Statistics from './routes/statistics.route'
 
 const app: Express = express()
 

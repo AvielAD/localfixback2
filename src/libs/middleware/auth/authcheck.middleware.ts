@@ -4,7 +4,7 @@ export const VerifyToken = async(req: Request, res: Response, next: NextFunction
     try {
         const token =  req.headers.authorization?.split(" ")[1]
         if(!token){
-            return [];
+            return res.status(401).json([]);
         }
         //efectuar llamado desde axios
         const response = await fetch(`${process.env.AUTH_API}/api/user`,{
@@ -14,6 +14,8 @@ export const VerifyToken = async(req: Request, res: Response, next: NextFunction
         })
         
         if(response.status == 200){
+            const dataresponse = await response.json()
+            req.body.uuidKey = dataresponse.uuidKey
             next()
         }
         else {

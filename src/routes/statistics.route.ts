@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as CtrlDevices from '../controllers/statistics.controller'
-import * as AuthCtrl from '../middleware/auth/authcheck.middleware'
+import * as AuthCtrl from '../libs/middleware/auth/authcheck.middleware'
 
 const router = Router()
 

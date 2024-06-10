@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import * as CtrlService from '../infraestructure/services/statistics.service'
+import * as CtrlService from '../libs/infraestructure/services/statistics.service'
 
 export const GetGeneralStatistics = async (req: Request, res: Response) => {
     try {

@@ -1,11 +1,11 @@
 import { Request, Response } from "express"
-import * as CtrlService from '../infraestructure/services/diagnostico.service'
-import { AddDiagnosticoDto, UpdateDiagnosticoDto } from "../dtos/diagnostico/diagnostico.dto";
+import * as CtrlService from '../Apps/Diagnosticos/Application/diagnostico.service'
+import { AddDiagnosticoDto, UpdateDiagnosticoDto } from "../Apps/Diagnosticos/Domain/diagnostico.dto";
 
 export const GetDiagnosticos = async (req: Request, res: Response) => {
     try {
-
-        const result = await CtrlService.GetDiagnosticos();
+        const iduser = req.body.uuidKey
+        const result = await CtrlService.GetDiagnosticos(iduser);
         return res.status(200).json(result);
 
     } catch (error) {
@@ -16,8 +16,8 @@ export const GetDiagnosticos = async (req: Request, res: Response) => {
 export const AddDiagnosticos = async (req: Request, res: Response) => {
     const newDiagnostic: AddDiagnosticoDto = req.body
     try {
-
-        const result = await CtrlService.AddDiagnostico(newDiagnostic);
+        const iduser = req.body.uuidKey
+        const result = await CtrlService.AddDiagnostico(newDiagnostic, iduser);
         return res.status(200).json(result);
 
     } catch (error) {
@@ -28,8 +28,8 @@ export const AddDiagnosticos = async (req: Request, res: Response) => {
 export const UpdateDiagnosticos = async (req: Request, res: Response) => {
     const newDiagnostic: UpdateDiagnosticoDto = req.body
     try {
-
-        const result = await CtrlService.UpdateDiagnostico(newDiagnostic);
+        const iduser = req.body.uuidKey
+        const result = await CtrlService.UpdateDiagnostico(newDiagnostic, iduser);
         return res.status(200).json(result);
 
     } catch (error) {
