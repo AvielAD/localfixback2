@@ -3,16 +3,16 @@ import { AddReparacionDto, CreateReparacionDto, CreateReparacionFirstDto, Repara
 
 const prisma = new PrismaClient()
 
-export const GetReparaciones = async (idUser: string)=>{
+export const GetReparaciones = async (idUser: string) => {
     try {
         const empresa = await prisma.usuarioempresa.findFirstOrThrow({
-            where:{
+            where: {
                 idusuario: idUser
             }
         })
         //LLamar a query para la vista 
         const responseView = await prisma.
-        $queryRaw`select 
+            $queryRaw`select 
         r.uuid, 
         r.recepcion, 
         r.entrega, 
@@ -27,67 +27,84 @@ export const GetReparaciones = async (idUser: string)=>{
     }
 }
 
-export const GetReparacionByUUID= async (uuidSearch: string, idUser:string) =>{
+export const GetReparacionByUUID = async (uuidSearch: string, idUser: string) => {
     let searchResponse = {} as ReparacionAllDto
 
-    try{
+    try {
         const empresa = await prisma.usuarioempresa.findFirstOrThrow({
-            where:{
+            where: {
                 idusuario: idUser
             }
         })
 
         const responseView = await prisma.
-        $queryRaw`select *
-        from reparacionesview r where r.empresa = ${empresa.idempresa} and r.uuid = ${uuidSearch}`
-            return responseView
+            $queryRaw`select *
+        from reparacionesview r 
+        where r.empresa = ${empresa.idempresa} 
+        and r.uuid::text = ${uuidSearch}`
+
         return responseView
-        
-    }catch(error){
+
+    } catch (error) {
+        console.log(error)
         return searchResponse
 
     }
 }
 
-export const AddReparacion = async(reparacion: AddReparacionDto, idUser: string)=>{
+export const AddReparacion = async (reparacion: AddReparacionDto, idUser: string) => {
     try {
+        const empresa = await prisma.usuarioempresa.findFirstOrThrow({
+            where: {
+                idusuario: idUser
+            }
+        })
         const newDiagnostico = await prisma.reparacion.create({
-            data:reparacion
-        }) 
-        if(newDiagnostico)
+            data: {
+                ...reparacion,
+                idempresa: empresa.idempresa
+            }
+        })
+        if (newDiagnostico)
             return true
         return false
-        
+
     } catch (error) {
-        console.log('Error: '+error)
+        console.log('Error: ' + error)
         return false
     }
 }
 
-export const CreateReparacion = async (createReparacion: CreateReparacionDto, idUser: string) =>{
+export const CreateReparacion = async (createReparacion: CreateReparacionDto, idUser: string) => {
     try {
         //Agregar cliente
+        const empresa = await prisma.usuarioempresa.findFirstOrThrow({
+            where: {
+                idusuario: idUser
+            }
+        })
         const newCliente = await prisma.cliente.create({
-            data:{
+            data: {
                 nombre: createReparacion.nombre,
                 apellido: createReparacion.apellido || "",
                 telefono: createReparacion.telefono || "",
                 email: createReparacion.email || "",
             }
         })
-       
+
         //Agregar reparacion
         const newReparacion = await prisma.reparacion.create({
-            data:{
+            data: {
                 fechaentrega: createReparacion.fechaentrega,
                 costototal: createReparacion.costototal,
                 idcliente: newCliente.id,
-                firststage: false
+                firststage: false,
+                idempresa: empresa.idempresa
             }
         })
         //asociar reparacion - diagnostico
         const newrepairDiag = await prisma.reparacion_diagnostico.create({
-            data:{
+            data: {
                 idreparacion: newReparacion.id,
                 iddiagnostico: createReparacion.iddiagnostico
             }
@@ -99,42 +116,49 @@ export const CreateReparacion = async (createReparacion: CreateReparacionDto, id
     }
 }
 
-export const CreateReparacionFirst=async (createReparacion: CreateReparacionFirstDto, idUser: string)=>{
+export const CreateReparacionFirst = async (createReparacion: CreateReparacionFirstDto, idUser: string) => {
     try {
         //Cliente
+        const empresa = await prisma.usuarioempresa.findFirstOrThrow({
+            where: {
+                idusuario: idUser
+            }
+        })
         const newCliente = await prisma.cliente.create({
-            data:{
+            data: {
                 nombre: createReparacion.nombre,
                 apellido: createReparacion.apellido || "",
                 telefono: createReparacion.telefono || "",
             }
         })
         //Diagnostico
-        
+
         const newDiagnostico = await prisma.diagnostico.create({
-            data:{
+            data: {
                 cliente: "N/A",
                 descripcionfalla: createReparacion.descripcionfalla,
                 sugerenciareparacion: createReparacion.sugerenciareparacion,
                 costopresupuesto: createReparacion.costototal,
                 idequipo: createReparacion.idequipo,
-                firststage: false
+                firststage: false,
+                idempresa: empresa.idempresa
             }
         })
         //Reparacion
         const newReparacion = await prisma.reparacion.create({
-            data:{
+            data: {
                 fechaentrega: createReparacion.fechaentrega,
                 costototal: createReparacion.costototal,
                 idcliente: newCliente.id,
-                firststage: true
+                firststage: true,
+                idempresa: empresa.idempresa
             }
         })
 
         //Reparacion Diagnostico
 
         const newRepairDiag = await prisma.reparacion_diagnostico.create({
-            data:{
+            data: {
                 idreparacion: newReparacion.id,
                 iddiagnostico: newDiagnostico.id
             }

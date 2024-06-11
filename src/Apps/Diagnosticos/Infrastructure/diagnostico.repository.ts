@@ -5,6 +5,7 @@ const prisma = new PrismaClient()
 
 export const GetDiagnosticos = async (idUser: string)=>{
     try {
+
         const empresa = await prisma.usuarioempresa.findFirstOrThrow({
             where:{
                 idusuario: idUser
@@ -31,9 +32,19 @@ export const GetDiagnosticos = async (idUser: string)=>{
 
 export const AddDiagnostico = async(diagnostico: AddDiagnosticoDto, idUser: string)=>{
     try {
+        const empresa = await prisma.usuarioempresa.findFirstOrThrow({
+            where:{
+                idusuario: idUser
+            }
+        })
         const newDiagnostico = await prisma.diagnostico.create({
             data:{
-                ...diagnostico,
+                cliente: diagnostico.cliente,
+                descripcionfalla: diagnostico.descripcionfalla,
+                sugerenciareparacion: diagnostico.sugerenciareparacion,
+                costopresupuesto: diagnostico.costopresupuesto,
+                idequipo: diagnostico.idequipo,
+                idempresa: empresa.idempresa,
                 firststage: true
             }
         }) 
@@ -42,6 +53,7 @@ export const AddDiagnostico = async(diagnostico: AddDiagnosticoDto, idUser: stri
         return false
         
     } catch (error) {
+        console.log(error)
         return false
     }
 }
