@@ -37,16 +37,15 @@ export const GetReparacionByUUID = async (uuidSearch: string, idUser: string) =>
             }
         })
 
-        const responseView = await prisma.
+        const responseView:Array<ReparacionAllDto> = await prisma.
             $queryRaw`select *
         from reparacionesview r 
         where r.empresa = ${empresa.idempresa} 
         and r.uuid::text = ${uuidSearch}`
 
-        return responseView
+        return responseView[0]
 
     } catch (error) {
-        console.log(error)
         return searchResponse
 
     }
