@@ -144,6 +144,10 @@ model reparacion_diagnostico {
 model empresa {
   id             Int              @id @default(autoincrement())
   nombre         String?          @db.VarChar(250)
+  descripcion    String?
+  direccion      String?
+  telefono       String?          @db.VarChar(30)
+  web            String?
   diagnostico    diagnostico[]
   reparacion     reparacion[]
   usuarioempresa usuarioempresa[]
@@ -171,6 +175,7 @@ view diagnosticosview {
   fecha            DateTime? @db.Timestamptz(6)
   descripcionfalla String?
   costopresupuesto Decimal?  @db.Money
+  empresa          Int?
 }
 
 view reparacionesview {
@@ -187,4 +192,5 @@ view reparacionesview {
   diagnostico String?
   presupuesto Decimal?  @db.Money
   total       Decimal?  @db.Money
+  empresa     Int?
 }

@@ -5,6 +5,7 @@ import Devices from './routes/device.route'
 import Diagnostico from './routes/diagnostico.route'
 import Reparacion from './routes/reparacion.route'
 import Statistics from './routes/statistics.route'
+import Empresa from './routes/empresa.route'
 
 const app: Express = express()
 
@@ -15,5 +16,6 @@ app.use('/api', Devices);
 app.use('/api', Diagnostico);
 app.use('/api', Reparacion);
 app.use('/api', Statistics);
+app.use('/api', Empresa);
 
 export default app

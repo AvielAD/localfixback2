@@ -11,7 +11,8 @@ SELECT
   d.descripcionfalla AS falla,
   d.sugerenciareparacion AS diagnostico,
   d.costopresupuesto AS presupuesto,
-  r.costototal AS total
+  r.costototal AS total,
+  r.idempresa AS empresa
 FROM
   (
     (
@@ -19,16 +20,19 @@ FROM
         (
           (
             (
-              reparacion_diagnostico rd
-              JOIN reparacion r ON ((r.id = rd.idreparacion))
+              (
+                reparacion_diagnostico rd
+                JOIN reparacion r ON ((r.id = rd.idreparacion))
+              )
+              JOIN diagnostico d ON ((d.id = rd.iddiagnostico))
             )
-            JOIN diagnostico d ON ((d.id = rd.iddiagnostico))
+            JOIN equipos e ON ((e.id = d.idequipo))
           )
-          JOIN equipos e ON ((e.id = d.idequipo))
+          JOIN brandequipo b ON ((b.id = e.idbrandequipo))
         )
-        JOIN brandequipo b ON ((b.id = e.idbrandequipo))
+        JOIN categoria_equipo ce ON ((ce.id = e.idcategoriaequipo))
       )
-      JOIN categoria_equipo ce ON ((ce.id = e.idcategoriaequipo))
+      JOIN cliente c ON ((c.id = r.idcliente))
     )
-    JOIN cliente c ON ((c.id = r.idcliente))
+    JOIN empresa em ON ((em.id = r.idempresa))
   );
